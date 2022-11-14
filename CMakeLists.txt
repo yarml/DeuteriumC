@@ -43,13 +43,3 @@ target_include_directories(${DTC_TGT} PUBLIC "${DTC_INC_DIR}/")
 
 # Include internal/common.h
 target_compile_options(${DTC_TGT} PRIVATE -include internal/common.h)
-
-# Testing
-
-include(CTest)
-
-add_executable(dtc_test_str test/str.c)
-
-target_link_libraries(dtc_test_str ${DTC_TGT})
-
-add_test(NAME dtc_test_str COMMAND dtc_test_str)
