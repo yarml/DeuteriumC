@@ -19,7 +19,9 @@ status dtc_str_init(dtc_str **out_str)
     if(!str)
         return DTC_STATUS_ALLOC;
 #endif
-    str->buf = malloc(str->alloc);
+    str->len = 0;
+    str->alloc = DTC_STR_INIT_ALLOC;
+    str->buf = calloc(str->alloc, 1);
 #ifdef DTC_SAFE_ALLOC
     if(!str->buf)
     {
@@ -27,11 +29,6 @@ status dtc_str_init(dtc_str **out_str)
         return DTC_STATUS_ALLOC;
     }
 #endif
-
-    str->alloc = DTC_STR_INIT_ALLOC;
-    str->len = 0;
-
-    memset(str->buf, 0, str->alloc);
 
     *out_str = str;
     return DTC_STATUS_SUCCESS;
@@ -44,6 +41,7 @@ status dtc_str_fini(dtc_str *str)
 #endif
     free(str->buf);
     free(str);
+    return DTC_STATUS_SUCCESS;
 }
 
 status dtc_str_buf(dtc_str *str, char **out_buf)
@@ -53,7 +51,7 @@ status dtc_str_buf(dtc_str *str, char **out_buf)
         return DTC_STATUS_PTR_NULL;
 #endif
     *out_buf = str->buf;
-    return 0;
+    return DTC_STATUS_SUCCESS;
 }
 status dtc_str_len(dtc_str *str, size_t *out_len)
 {

@@ -9,5 +9,6 @@ typedef int status;
 #define DTC_STATUS_ALLOC       (2)
 #define DTC_STATUS_OVERLAP     (3)
 #define DTC_STATUS_IDX_INVALID (4)
+#define DTC_STATUS_VAL_INVALID (5)
 
 #endif
