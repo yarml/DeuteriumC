@@ -20,8 +20,9 @@ status dtc_list_arr(dtc_list *list, void ***out_arr);
  * nout_el: if not NULL, should point to a pointer and will be set to point to the newly allocated item's data directly
  */
 status dtc_list_append(dtc_list *list, void ***nout_el);
-status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_el);
-status dtc_list_remove(dtc_list *list, size_t idx);
+status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_dptrel);
+status dtc_list_rem(dtc_list *list, size_t idx, void **nout_ptrel);
+status dtc_list_pop(dtc_list *list, void **nout_ptrel);
 status dtc_list_at(dtc_list *list, size_t idx, void ***out_el);
 
 #endif

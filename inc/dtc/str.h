@@ -11,7 +11,7 @@
     #include <internal/str.h>
 #endif
 
-status dtc_str_init(dtc_str **out_str);
+status dtc_str_init(char *n_init, dtc_str **out_str);
 status dtc_str_fini(dtc_str *str);
 
 status dtc_str_buf(dtc_str *str, char **out_buf);
@@ -26,6 +26,9 @@ status dtc_str_sets(dtc_str *str, char const *s);
 status dtc_str_setc(dtc_str *str, char c, size_t idx);
 
 status dtc_str_getc(dtc_str *str, size_t idx, char *out_c);
+
+status dtc_str_rem(dtc_str *str, size_t idx, char *nout_c);
+status dtc_str_pop(dtc_str *str, char *nout_c);
 
 status dtc_str_trunc(dtc_str *str, size_t new_size);
 

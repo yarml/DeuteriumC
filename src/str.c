@@ -7,7 +7,7 @@
 #include <dtc/str.h>
 
 
-status dtc_str_init(dtc_str **out_str)
+status dtc_str_init(char *n_init, dtc_str **out_str)
 {
 #ifdef DTC_SAFE_PARAM
     if(!out_str)
@@ -19,8 +19,17 @@ status dtc_str_init(dtc_str **out_str)
     if(!str)
         return DTC_STATUS_ALLOC;
 #endif
-    str->len = 0;
-    str->alloc = DTC_STR_INIT_ALLOC;
+    if(!n_init)
+    {
+        str->len = 0;
+        str->alloc = DTC_STR_INIT_ALLOC;
+    }
+    else
+    {
+        size_t init_len = strlen(n_init);
+        str->len = init_len;
+        str->alloc = init_len + 1 + DTC_STR_INIT_ALLOC;
+    }
     str->buf = calloc(str->alloc, 1);
 #ifdef DTC_SAFE_ALLOC
     if(!str->buf)
@@ -29,6 +38,8 @@ status dtc_str_init(dtc_str **out_str)
         return DTC_STATUS_ALLOC;
     }
 #endif
+    if(n_init)
+        strcpy(str->buf, n_init);
 
     *out_str = str;
     return DTC_STATUS_SUCCESS;
@@ -141,6 +152,37 @@ status dtc_str_getc(dtc_str *str, size_t idx, char *out_c)
         return DTC_STATUS_IDX_INVALID;
 #endif
     *out_c = str->buf[idx];
+    return DTC_STATUS_SUCCESS;
+}
+
+status dtc_str_rem(dtc_str *str, size_t idx, char *nout_c)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!str)
+        return DTC_STATUS_PTR_NULL;
+    if(idx >= str->len)
+        return DTC_STATUS_IDX_INVALID;
+#endif
+    DTC_SET_OUT(nout_c, str->buf[idx]);
+    // move the null termination too(hence the + 1 in the last argument)
+    memmove(str->buf + idx, str->buf + idx + 1, str->len - idx + 1);
+    --str->len;
+    return DTC_STATUS_SUCCESS;
+}
+status dtc_str_pop(dtc_str *str, char *nout_c)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!str)
+        return DTC_STATUS_PTR_NULL;
+#endif
+
+#ifdef DTC_SAFE_CONTAINER
+    if(!str->len)
+        return DTC_STATUS_EMPTY;
+#endif
+    DTC_SET_OUT(nout_c, str->buf[str->len - 1]);
+    --str->len;
+    str->buf[str->len] = 0;
     return DTC_STATUS_SUCCESS;
 }
 

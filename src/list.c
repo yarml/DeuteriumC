@@ -76,7 +76,10 @@ status dtc_list_append(dtc_list *list, void ***nout_el)
 
     if(list->len >= list->allocptr)
     {
-        DTC_CALL(status_sub, dtc_intenal_list_extend(list, 1 + DTC_LIST_INIT_ALLOC))
+        DTC_CALL(
+            status_sub,
+            dtc_intenal_list_extend(list, 1 + DTC_LIST_INIT_ALLOC)
+        )
             return status_sub;
     }
     DTC_SET_OUT(nout_el, list->ptrbuf + list->len);
@@ -96,15 +99,22 @@ status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_el)
 
     if(list->len >= list->allocptr)
     {
-        DTC_CALL(status_sub, dtc_intenal_list_extend(list, 1 + DTC_LIST_INIT_ALLOC))
+        DTC_CALL(
+            status_sub,
+            dtc_intenal_list_extend(list, 1 + DTC_LIST_INIT_ALLOC)
+        )
             return status_sub;
     }
 
-    memmove(list->ptrbuf + idx + 1, list->ptrbuf + idx, (list->len - idx) * sizeof(void *));
+    memmove(
+        list->ptrbuf + idx + 1,
+        list->ptrbuf + idx,
+        (list->len - idx) * sizeof(void *)
+    );
     DTC_SET_OUT(nout_el, list->ptrbuf + idx);
     return DTC_STATUS_SUCCESS;
 }
-status dtc_list_remove(dtc_list *list, size_t idx)
+status dtc_list_rem(dtc_list *list, size_t idx, void **nout_ptrel)
 {
 #ifdef DTC_SAFE_PARAM
     if(!list)
@@ -112,7 +122,28 @@ status dtc_list_remove(dtc_list *list, size_t idx)
     if(idx >= list->len)
         return DTC_STATUS_IDX_INVALID;
 #endif
-    memmove(list->ptrbuf + idx, list->ptrbuf + idx + 1, (list->len - idx - 1) * sizeof(void *));
+    DTC_SET_OUT(nout_ptrel, *(list->ptrbuf + idx));
+    memmove(
+        list->ptrbuf + idx,
+        list->ptrbuf + idx + 1,
+        (list->len - idx - 1) * sizeof(void *)
+    );
+    --list->len;
+    return DTC_STATUS_SUCCESS;
+}
+status dtc_list_pop(dtc_list *list, void **nout_ptrel)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!list)
+        return DTC_STATUS_PTR_NULL;
+#endif
+
+#ifdef DTC_SAFE_CONTAINER
+    if(!list->len)
+        return DTC_STATUS_EMPTY;
+#endif
+    DTC_SET_OUT(nout_ptrel, (list->ptrbuf + list->len - 1));
+    --list->len;
     return DTC_STATUS_SUCCESS;
 }
 status dtc_list_at(dtc_list *list, size_t idx, void ***out_el)
@@ -135,7 +166,10 @@ status dtc_intenal_list_extend(dtc_list *list, size_t add_allocptr)
     if(!add_allocptr)
         return DTC_STATUS_VAL_INVALID;
 #endif
-    void **nptrbuf = realloc(list->ptrbuf, (list->allocptr + add_allocptr) * sizeof(void *));
+    void **nptrbuf = realloc(
+        list->ptrbuf,
+        (list->allocptr + add_allocptr) * sizeof(void *)
+    );
 #ifdef DTC_SAFE_ALLOC
     if(!nptrbuf)
         return DTC_STATUS_ALLOC;
