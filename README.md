@@ -41,8 +41,8 @@ Parameters prefixed with `out_` are always of pointer type, and are meant to be
 optional outputs of the function. If that parameter has a NULL value, the
 function skips all writes to the data it points to.
 
-### Functions
-#### Return Value
+## Functions
+### Return Value
 All DeuteriumC functions are made to act as much similarly to Hydrogen
 functions. All DeuteriumC functions have a return type of `status`, which is a
 typedef of C's `size_t`.
