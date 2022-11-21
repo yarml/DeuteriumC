@@ -2,6 +2,7 @@
 #define DTC_LIST_H
 
 #include <dtc/status.h>
+#include <dtc/dtc.h>
 
 #ifndef DTC
     typedef void dtc_list;
@@ -9,7 +10,13 @@
     #include <internal/list.h>
 #endif
 
-status dtc_list_init(dtc_list **out_list);
+status dtc_list_init(void *n_api_unused_0, dtc_list **out_list);
+
+/* List elements weren't copied, calling function should copy them manually */
+/* ELNCPY stands for ELement Not CoPied(Y) */
+#define DTC_STATUS_LIST_COPY_ELNCPY (1024)
+
+status dtc_list_copy(dtc_list *src, dtc_list **out_list);
 status dtc_list_fini(dtc_list *list);
 
 status dtc_list_len(dtc_list *list, size_t *out_len);

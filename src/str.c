@@ -4,6 +4,7 @@
 #include <internal/utils.h>
 #include <internal/str.h>
 #include <conf/str.h>
+#include <dtc/dtc.h>
 #include <dtc/str.h>
 
 
@@ -41,9 +42,32 @@ status dtc_str_init(char *n_init, dtc_str **out_str)
     if(n_init)
         strcpy(str->buf, n_init);
 
+    dtc_base_init_param base_params;
+
+    base_params.name = "dtc_str";
+    base_params.f_init = dtc_str_init;
+    base_params.f_copy = dtc_str_copy;
+    base_params.f_fini = dtc_str_fini;
+
+    dtc_base_init(&base_params, &str->base);
+
     *out_str = str;
     return DTC_STATUS_SUCCESS;
 }
+
+status dtc_str_copy(dtc_str *src, dtc_str **out_str)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!src || !out_str)
+        return DTC_STATUS_PTR_NULL;
+#endif
+    status status_sub;
+
+    DTC_CALL(status_sub, dtc_str_init(src->buf, out_str))
+        return status_sub;
+    return DTC_STATUS_SUCCESS;
+}
+
 status dtc_str_fini(dtc_str *str)
 {
 #ifdef DTC_SAFE_PARAM

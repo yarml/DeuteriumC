@@ -6,7 +6,9 @@
 #include <conf/list.h>
 #include <dtc/list.h>
 
-status dtc_list_init(dtc_list **out_list)
+
+
+status dtc_list_init(void *n_api_unused_0, dtc_list **out_list)
 {
 #ifdef DTC_SAFE_PARAM
     if(!elsize)
@@ -15,11 +17,19 @@ status dtc_list_init(dtc_list **out_list)
         return DTC_STATUS_PTR_NULL;
 #endif
     dtc_list *list = calloc(1, sizeof(dtc_list));
-
 #ifdef DTC_SAFE_ALLOC
     if(!list)
         return DTC_STATUS_ALLOC;
 #endif
+
+    dtc_base_init_param base_params;
+
+    base_params.name = "dtc_list";
+    base_params.f_init = dtc_list_init;
+    base_params.f_copy = dtc_list_copy;
+    base_params.f_fini = dtc_list_fini;
+
+    dtc_base_init(&base_params, &list->base);
 
     list->len = 0;
     list->allocptr = DTC_LIST_INIT_ALLOC;
@@ -35,6 +45,54 @@ status dtc_list_init(dtc_list **out_list)
     *out_list = list;
     return DTC_STATUS_SUCCESS;
 }
+
+status dtc_list_copy(dtc_list *src, dtc_list **out_list)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!src || !out_list)
+        return DTC_STATUS_PTR_NULL;
+#endif
+    dtc_list *list = calloc(1, sizeof(dtc_list));
+#ifdef DTC_SAFE_ALLOC
+    if(!list)
+        return DTC_STATUS_ALLOC;
+#endif
+    dtc_base_init_param base_params;
+
+    base_params.name = "dtc_list";
+    base_params.f_init = dtc_list_init;
+    base_params.f_copy = dtc_list_copy;
+    base_params.f_fini = dtc_list_fini;
+
+    dtc_base_init(&base_params, &list->base);
+
+    list->len = src->len;
+    list->allocptr = list->len + DTC_LIST_INIT_ALLOC;
+    list->ptrbuf = calloc(list->allocptr, sizeof(void *));
+#ifdef DTC_SAFE_ALLOC
+    if(!list->ptrbuf)
+    {
+        free(list);
+        return DTC_STATUS_PTR_NULL;
+    }
+#endif
+
+    // If stored objects are DTC compliant, copy them as well
+    // Otherwise return a status signaling element objects
+    // weren't copied
+    if(!dtc_obj_is_dtc(*src->ptrbuf))
+    {
+        for(size_t i = 0; i < list->len; ++i)
+        {
+            dtc_base *cbase = src->ptrbuf[i];
+            cbase->f_copy(cbase, src->ptrbuf + i);
+        }
+        return DTC_STATUS_SUCCESS;
+    }
+    return DTC_STATUS_LIST_COPY_ELNCPY;
+
+}
+
 status dtc_list_fini(dtc_list *list)
 {
 #ifdef DTC_SAFE_PARAM

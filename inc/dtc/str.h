@@ -12,6 +12,7 @@
 #endif
 
 status dtc_str_init(char *n_init, dtc_str **out_str);
+status dtc_str_copy(dtc_str *src, dtc_str **out_str);
 status dtc_str_fini(dtc_str *str);
 
 status dtc_str_buf(dtc_str *str, char **out_buf);

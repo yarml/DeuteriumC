@@ -15,4 +15,6 @@ typedef int status;
 /** Common return success status */
 #define DTC_STATUS_SUCCESS     (0)
 
+#define STATUS_ERROR(s) (s < 0)
+
 #endif
