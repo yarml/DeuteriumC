@@ -14,20 +14,20 @@ so calling DeuteriumC functions from Hydrogen will require some special syntax
 in Hydrogen that I didn't design yet.
 
 ## Why DeuteriumC
-I have two main reasons why I am porting the non existent yet Deuterium to C; 
+I have two main reasons why I am porting the non existent yet Deuterium to C;
 The first one is getting an idea about how usable the interface is before I get
 to write the Hydrogen compiler using it. The second reason is because I got
 tired of writing the same dynamic lists, strings and other structures in C every
-time I wanted to use them in a new project, so I thought it would be nice to 
-have Deuterium in C and let it be the library that handles implement those 
+time I wanted to use them in a new project, so I thought it would be nice to
+have Deuterium in C and let it be the library that handles implement those
 structures every time I want to use them in C.
 
 # Interface style
 ## Naming convention
 ### Global symbol naming
 All public and private DeuteriumC symbols are prefixed with `dtc_`, followed by
-the name of the module that symbol is related to, for instance, all string 
-related functions and structures are prefixed `dtc_str` then followed by (an 
+the name of the module that symbol is related to, for instance, all string
+related functions and structures are prefixed `dtc_str` then followed by (an
 often abbreviated) name of the symbol.
 ### Function parameter naming
 #### n_ prefix

@@ -129,7 +129,7 @@ status dtc_str_appendc(dtc_str *str, char c)
 
     DTC_CALL(status_sub, dtc_str_trunc(str, str->len + 1))
         return status_sub;
-    
+
     str->buf[str->len - 1] = c;
     return DTC_STATUS_SUCCESS;
 }
@@ -150,9 +150,9 @@ status dtc_str_sets(dtc_str *str, char const *s)
 
     DTC_CALL(status_sub, dtc_str_trunc(str, nstrlen))
         return status_sub;
-    
+
     memcpy(str->buf, s, nstrlen);
-    
+
     return DTC_STATUS_SUCCESS;
 }
 status dtc_str_setc(dtc_str *str, char c, size_t idx)

@@ -21,7 +21,8 @@ status dtc_base_checksum(dtc_base *base, int *out_checksum)
     if(!base || !out_checksum)
         return DTC_STATUS_PTR_NULL;
 #endif
-    int size_ints = (sizeof(dtc_base) - offsetof(dtc_base, checksum)) / sizeof(int);
+    int size_ints =
+        (sizeof(dtc_base) - offsetof(dtc_base, checksum)) / sizeof(int);
     int *ibase = base;
     int sum = 0;
     for(int i = 0; i < size_ints; ++i)
