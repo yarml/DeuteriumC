@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <internal/utils.h>
-
 #include <conf/list.h>
 #include <dtc/list.h>
 
@@ -10,24 +8,18 @@
 
 status dtc_list_init(void *n_api_unused_0, dtc_list **out_list)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!elsize)
-        return DTC_STATUS_VAL_INVALID;
-    if(!out_list)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(out_list);
+
     dtc_list *list = calloc(1, sizeof(dtc_list));
-#ifdef DTC_SAFE_ALLOC
-    if(!list)
-        return DTC_STATUS_ALLOC;
-#endif
+
+    DTC_ASSERT_ALLOC_VALID(list);
 
     dtc_base_init_param base_params;
 
     base_params.name = "dtc_list";
-    base_params.f_init = dtc_list_init;
-    base_params.f_copy = dtc_list_copy;
-    base_params.f_fini = dtc_list_fini;
+    base_params.f_init = (dtc_type_f_init) dtc_list_init;
+    base_params.f_copy = (dtc_type_f_copy) dtc_list_copy;
+    base_params.f_fini = (dtc_type_f_fini) dtc_list_fini;
 
     dtc_base_init(&base_params, &list->base);
 
@@ -48,21 +40,18 @@ status dtc_list_init(void *n_api_unused_0, dtc_list **out_list)
 
 status dtc_list_copy(dtc_list *src, dtc_list **out_list)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!src || !out_list)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(src);
+    DTC_ASSERT_PARAM_PTR_VALID(out_list);
+
     dtc_list *list = calloc(1, sizeof(dtc_list));
-#ifdef DTC_SAFE_ALLOC
-    if(!list)
-        return DTC_STATUS_ALLOC;
-#endif
+    DTC_ASSERT_ALLOC_VALID(list);
+
     dtc_base_init_param base_params;
 
     base_params.name = "dtc_list";
-    base_params.f_init = dtc_list_init;
-    base_params.f_copy = dtc_list_copy;
-    base_params.f_fini = dtc_list_fini;
+    base_params.f_init = (dtc_type_f_init) dtc_list_init;
+    base_params.f_copy = (dtc_type_f_copy) dtc_list_copy;
+    base_params.f_fini = (dtc_type_f_fini) dtc_list_fini;
 
     dtc_base_init(&base_params, &list->base);
 
@@ -95,10 +84,7 @@ status dtc_list_copy(dtc_list *src, dtc_list **out_list)
 
 status dtc_list_fini(dtc_list *list)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
     free(list->ptrbuf);
     free(list);
     return DTC_STATUS_SUCCESS;
@@ -106,30 +92,24 @@ status dtc_list_fini(dtc_list *list)
 
 status dtc_list_len(dtc_list *list, size_t *out_len)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list || !out_len)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_PARAM_PTR_VALID(out_len);
+
     *out_len = list->len;
     return DTC_STATUS_SUCCESS;
 }
 status dtc_list_arr(dtc_list *list, void ***out_arr)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list || !out_arr)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_PARAM_PTR_VALID(out_arr);
+
     *out_arr = list->ptrbuf;
     return DTC_STATUS_SUCCESS;
 }
 
 status dtc_list_append(dtc_list *list, void ***nout_el)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-#endif
-
+    DTC_ASSERT_PARAM_PTR_VALID(list);
     status status_sub;
 
     if(list->len >= list->allocptr)
@@ -146,12 +126,9 @@ status dtc_list_append(dtc_list *list, void ***nout_el)
 }
 status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_el)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-    if(idx > list->len)
-        return DTC_STATUS_IDX_INVALID;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    /* Index can be exactly len */
+    DTC_ASSERT_PARAM_IDX_VALID(idx, list->len + 1);
 
     status status_sub;
 
@@ -174,12 +151,9 @@ status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_el)
 }
 status dtc_list_rem(dtc_list *list, size_t idx, void **nout_ptrel)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-    if(idx >= list->len)
-        return DTC_STATUS_IDX_INVALID;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_PARAM_IDX_VALID(idx, list->len);
+
     DTC_SET_OUT(nout_ptrel, *(list->ptrbuf + idx));
     memmove(
         list->ptrbuf + idx,
@@ -191,47 +165,33 @@ status dtc_list_rem(dtc_list *list, size_t idx, void **nout_ptrel)
 }
 status dtc_list_pop(dtc_list *list, void **nout_ptrel)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_CONTAINER_NEMPTY(list->len);
 
-#ifdef DTC_SAFE_CONTAINER
-    if(!list->len)
-        return DTC_STATUS_EMPTY;
-#endif
     DTC_SET_OUT(nout_ptrel, (list->ptrbuf + list->len - 1));
     --list->len;
     return DTC_STATUS_SUCCESS;
 }
 status dtc_list_at(dtc_list *list, size_t idx, void ***out_el)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list || !out_el)
-        return DTC_STATUS_PTR_NULL;
-    if(idx >= list->len)
-        return DTC_STATUS_IDX_INVALID;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_PARAM_PTR_VALID(out_el);
+    DTC_ASSERT_PARAM_IDX_VALID(idx, list->len);
+
     *out_el = list->ptrbuf + idx;
     return DTC_STATUS_SUCCESS;
 }
 
 status dtc_intenal_list_extend(dtc_list *list, size_t add_allocptr)
 {
-#ifdef DTC_SAFE_PARAM
-    if(!list)
-        return DTC_STATUS_PTR_NULL;
-    if(!add_allocptr)
-        return DTC_STATUS_VAL_INVALID;
-#endif
+    DTC_ASSERT_PARAM_PTR_VALID(list);
+    DTC_ASSERT_PARAM_VAL(add_allocptr);
+
     void **nptrbuf = realloc(
         list->ptrbuf,
         (list->allocptr + add_allocptr) * sizeof(void *)
     );
-#ifdef DTC_SAFE_ALLOC
-    if(!nptrbuf)
-        return DTC_STATUS_ALLOC;
-#endif
+    DTC_ASSERT_ALLOC_VALID(nptrbuf);
     list->ptrbuf = nptrbuf;
     memset(list->ptrbuf + list->allocptr, 0, add_allocptr * sizeof(void *));
     list->allocptr += add_allocptr;
