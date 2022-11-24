@@ -5,6 +5,6 @@
 
 #define DTC_SET_OUT(out, val) if(out) *out = val
 
-#define DTC_CALL(status_var, call) status_var = call; if(status_var)
+#define DTC_CALL(status_var, call) status_var = call; if(status_var < 0)
 
 #endif

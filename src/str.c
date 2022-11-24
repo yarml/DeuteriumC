@@ -178,6 +178,34 @@ status dtc_str_getc(dtc_str *str, size_t idx, char *out_c)
     *out_c = str->buf[idx];
     return DTC_STATUS_SUCCESS;
 }
+status dtc_str_head(dtc_str *str, char *out_c)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!str || !out_c)
+        return DTC_STATUS_PTR_NULL;
+#endif
+#ifdef DTC_SAFE_CONTAINER
+    if(!str->len)
+        return DTC_STATUS_EMPTY;
+#endif
+
+    *out_c = str->buf[0];
+    return DTC_STATUS_SUCCESS;
+}
+status dtc_str_tail(dtc_str *str, char *out_c)
+{
+#ifdef DTC_SAFE_PARAM
+    if(!str || !out_c)
+        return DTC_STATUS_PTR_NULL;
+#endif
+#ifdef DTC_SAFE_CONTAINER
+    if(!str->len)
+        return DTC_STATUS_EMPTY;
+#endif
+
+    *out_c = str->buf[str->len - 1];
+    return DTC_STATUS_SUCCESS;
+}
 
 status dtc_str_rem(dtc_str *str, size_t idx, char *nout_c)
 {
