@@ -23,6 +23,8 @@ add_library(${DTC_TGT} STATIC ${DTC_SRC} ${DTC_INC})
 # Add DTC definition
 target_compile_definitions(${DTC_TGT} PRIVATE ${DTC_DEF_PFX})
 
+set(CMAKE_C_FLAGS_DEBUG "-ggdb3")
+
 # Handle build in debug mode
 if(DEBUG)
     message("Building in debug mode...")

@@ -1,0 +1,6 @@
+#ifndef DTC_CONF_ISTREAM_H
+#define DTC_CONF_ISTREAM_H
+
+#define DTC_ISTREAM_READ_MORE_MAX_LEN (32)
+
+#endif
