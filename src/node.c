@@ -45,7 +45,7 @@ status dtc_node_copy(dtc_node *src, dtc_node **out_node)
     DTC_ASSERT_PARAM_PTR_VALID(src);
     DTC_ASSERT_PARAM_PTR_VALID(out_node);
 
-    status status_sub;
+    status status_sub = 0;
 
     status rs = DTC_STATUS_SUCCESS;
     void *ndata = 0;

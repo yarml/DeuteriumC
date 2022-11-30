@@ -10,7 +10,7 @@ status dtc_istream_init(FILE *fistream, dtc_istream **out_stream)
     DTC_ASSERT_PARAM_PTR_VALID(fistream);
     DTC_ASSERT_PARAM_PTR_VALID(out_stream);
 
-    status status_sub;
+    status status_sub = 0;
 
     dtc_istream *istream = calloc(1, sizeof(dtc_istream));
 
@@ -76,7 +76,7 @@ status dtc_istream_head_slot_init(
     DTC_ASSERT_PARAM_PTR_VALID(istream);
     DTC_ASSERT_PARAM_PTR_VALID(out_head);
 
-    status status_sub;
+    status status_sub = 0;
     size_t saved_heads_count;
     dtc_istream_head **saved_heads;
 
@@ -154,14 +154,13 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
 {
     DTC_ASSERT_PARAM_PTR_VALID(istream);
 
-    status status_sub;
+    status status_sub = 0;
     while(1)
     {
         size_t readlen;
         DTC_CALL(status_sub, dtc_str_len(istream->data, &readlen))
             return status_sub;
 
-        ++(istream->head.head_pos);
         if(istream->head.head_pos >= readlen)
         {
             DTC_CALL(status_sub, dtc_istream_read_more(istream))
@@ -178,10 +177,9 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
             return DTC_STATUS_ISTREAM_READC_EOF;
         }
 
-        char c;
-        dtc_str_tail(istream->data, &c);
+        int c;
         dtc_str_getc(istream->data, istream->head.head_pos, &c);
-
+        ++istream->head.head_pos;
         if(c == '\n')
         {
             istream->head.colm = 0;
@@ -189,7 +187,6 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
         }
         else
             ++istream->head.colm;
-        ++istream->head.head_pos;
 
         if(istream->top_mode)
         {
@@ -206,7 +203,9 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
             }
         }
 
-        return c;
+        DTC_SET_OUT(nout_c, c);
+
+        return DTC_STATUS_SUCCESS;
     }
 }
 
@@ -228,12 +227,21 @@ status dtc_istream_file(dtc_istream *stream, FILE **out_fistream)
 
     return DTC_STATUS_SUCCESS;
 }
+status dtc_istream_data(dtc_istream *istream, dtc_str **out_data)
+{
+    DTC_ASSERT_PARAM_PTR_VALID(istream);
+    DTC_ASSERT_PARAM_PTR_VALID(out_data);
+
+    *out_data = istream->data;
+
+    return DTC_STATUS_SUCCESS;
+}
 
 status dtc_istream_mode_push(dtc_istream *istream, dtc_istream_f_mode f_mode)
 {
     DTC_ASSERT_PARAM_PTR_VALID(istream);
 
-    status status_sub;
+    status status_sub = 0;
 
     dtc_node *ntop_mode;
     dtc_node_init_param nparam;
@@ -252,7 +260,7 @@ status dtc_istream_mode_pop(dtc_istream *istream)
     DTC_ASSERT_PARAM_PTR_VALID(istream);
     DTC_ASSERT_PARAM_PTR_VALID(istream->top_mode);
 
-    status status_sub;
+    status status_sub = 0;
 
     dtc_node *otop_mode = istream->top_mode;
 
@@ -268,7 +276,7 @@ status dtc_istream_read_more(dtc_istream *istream)
 {
     DTC_ASSERT_PARAM_PTR_VALID(istream);
 
-    status status_sub;
+    status status_sub = 0;
     char buf[DTC_ISTREAM_READ_MORE_MAX_LEN + 1];
 
     memset(buf, 0, DTC_ISTREAM_READ_MORE_MAX_LEN + 1);

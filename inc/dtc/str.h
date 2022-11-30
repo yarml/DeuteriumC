@@ -26,7 +26,7 @@ status dtc_str_appendc(dtc_str *str, char c);
 status dtc_str_sets(dtc_str *str, char const *s);
 status dtc_str_setc(dtc_str *str, char c, size_t idx);
 
-status dtc_str_getc(dtc_str *str, size_t idx, char *out_c);
+status dtc_str_getc(dtc_str *str, size_t idx, int *out_c);
 status dtc_str_head(dtc_str *str, char *out_c);
 status dtc_str_tail(dtc_str *str, char *out_c);
 

@@ -110,7 +110,7 @@ status dtc_list_arr(dtc_list *list, void ***out_arr)
 status dtc_list_append(dtc_list *list, void ***nout_el)
 {
     DTC_ASSERT_PARAM_PTR_VALID(list);
-    status status_sub;
+    status status_sub = 0;
 
     if(list->len >= list->allocptr)
     {
@@ -130,7 +130,7 @@ status dtc_list_insert(dtc_list *list, size_t idx, void ***nout_el)
     /* Index can be exactly len */
     DTC_ASSERT_PARAM_IDX_VALID(idx, list->len + 1);
 
-    status status_sub;
+    status status_sub = 0;
 
     if(list->len >= list->allocptr)
     {

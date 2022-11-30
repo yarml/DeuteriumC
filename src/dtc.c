@@ -3,6 +3,7 @@
 
 status dtc_base_init(dtc_base_init_param *params, dtc_base *out_base)
 {
+    DTC_ASSERT_PARAM_PTR_VALID(params);
     DTC_ASSERT_PARAM_PTR_VALID(out_base);
 
     out_base->name = params->name;
@@ -11,6 +12,8 @@ status dtc_base_init(dtc_base_init_param *params, dtc_base *out_base)
     out_base->f_fini = params->f_fini;
     out_base->magic = DTC_BASE_MAGIC;
     dtc_base_checksum(out_base, &out_base->checksum);
+
+    return DTC_STATUS_SUCCESS;
 }
 
 status dtc_base_checksum(dtc_base *base, int *out_checksum)
@@ -25,6 +28,8 @@ status dtc_base_checksum(dtc_base *base, int *out_checksum)
     for(int i = 0; i < size_ints; ++i)
         sum += ibase[i];
     *out_checksum = -sum;
+
+    return DTC_STATUS_SUCCESS;
 }
 
 status dtc_obj_is_dtc(void *obj)

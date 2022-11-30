@@ -1,6 +1,7 @@
 #ifndef DTC_ISTREAM_H
 #define DTC_ISTREAM_H
 
+#include <dtc/str.h>
 #include <dtc/status.h>
 #include <dtc/dtc.h>
 
@@ -48,6 +49,8 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c);
 
 status dtc_istream_ghead(dtc_istream *stream, dtc_istream_head *out_head);
 status dtc_istream_file(dtc_istream *stream, FILE **out_fistream);
+status dtc_istream_data(dtc_istream *istream, dtc_str **out_data);
+
 
 status dtc_istream_mode_push(dtc_istream *istream, dtc_istream_f_mode f_mode);
 status dtc_istream_mode_pop(dtc_istream *istream);

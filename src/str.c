@@ -55,7 +55,7 @@ status dtc_str_copy(dtc_str *src, dtc_str **out_str)
     DTC_ASSERT_PARAM_PTR_VALID(src);
     DTC_ASSERT_PARAM_PTR_VALID(out_str);
 
-    status status_sub;
+    status status_sub = 0;
 
     DTC_CALL(status_sub, dtc_str_init(src->buf, out_str))
         return status_sub;
@@ -98,7 +98,7 @@ status dtc_str_appends(dtc_str *str, char const *s)
     if(str->buf <= s && s < str->buf + str->len)
         return DTC_STATUS_OVERLAP;
 #endif
-    status status_sub;
+    status status_sub = 0;
 
     size_t nstrlen;
 
@@ -114,7 +114,7 @@ status dtc_str_appendc(dtc_str *str, char c)
 {
     DTC_ASSERT_PARAM_PTR_VALID(str);
 
-    status status_sub;
+    status status_sub = 0;
 
     DTC_CALL(status_sub, dtc_str_trunc(str, str->len + 1))
         return status_sub;
@@ -132,7 +132,7 @@ status dtc_str_sets(dtc_str *str, char const *s)
     if(str->buf <= s && s < str->buf + str->len)
         return DTC_STATUS_OVERLAP;
 #endif
-    status status_sub;
+    status status_sub = 0;
     size_t nstrlen;
 
     nstrlen = strlen(s);
@@ -153,13 +153,14 @@ status dtc_str_setc(dtc_str *str, char c, size_t idx)
     return DTC_STATUS_SUCCESS;
 }
 
-status dtc_str_getc(dtc_str *str, size_t idx, char *out_c)
+status dtc_str_getc(dtc_str *str, size_t idx, int *out_c)
 {
     DTC_ASSERT_PARAM_PTR_VALID(str);
     DTC_ASSERT_PARAM_PTR_VALID(out_c);
-    DTC_ASSERT_PARAM_IDX_VALID(idx, str->len)
+    DTC_ASSERT_PARAM_IDX_VALID(idx, str->len);
 
     *out_c = str->buf[idx];
+
     return DTC_STATUS_SUCCESS;
 }
 status dtc_str_head(dtc_str *str, char *out_c)
