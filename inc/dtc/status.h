@@ -11,6 +11,7 @@ typedef int status;
 #define DTC_STATUS_VAL_INVALID (-5)
 #define DTC_STATUS_IO          (-6)
 #define DTC_STATUS_EMPTY       (-7)
+#define DTC_STATUS_NIMPL       (-8)
 
 /** Common return success status */
 #define DTC_STATUS_SUCCESS     (0)

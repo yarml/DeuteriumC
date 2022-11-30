@@ -56,14 +56,27 @@ status dtc_istream_init(FILE *fistream, dtc_istream **out_stream)
 }
 status dtc_istream_copy(dtc_istream *src, dtc_istream **out_stream)
 {
-// TODO: Implement stream copy
+    // TODO: Implement stream copy
+    return DTC_STATUS_NIMPL;
 }
 status dtc_istream_fini(dtc_istream *istream)
 {
     DTC_ASSERT_PARAM_PTR_VALID(istream);
 
+    dtc_node *cnode;
+
     dtc_list_fini(istream->saved_heads);
     dtc_str_fini(istream->data);
+
+    cnode = istream->top_mode;
+
+    while(cnode)
+    {
+        dtc_node *nnode = cnode->next;
+        dtc_node_fini(cnode);
+        cnode = nnode;
+    }
+
     free(istream);
     return DTC_STATUS_SUCCESS;
 }

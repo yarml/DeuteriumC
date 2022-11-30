@@ -9,7 +9,7 @@ import os
 MAX_LEN = 80
 
 for root, dirs, files in os.walk('./'):
-    if root.startswith(('./.git', './build')):
+    if root.startswith(('./.git', './build', './test/build')):
         continue
     for file in files:
         with open(root + '/' + file) as f:
