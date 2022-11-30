@@ -266,6 +266,8 @@ status dtc_istream_mode_push(dtc_istream *istream, dtc_istream_f_mode f_mode)
     DTC_CALL(status_sub, dtc_node_init(&nparam, &ntop_mode))
         return status_sub;
 
+    istream->top_mode = ntop_mode;
+
     return DTC_STATUS_SUCCESS;
 }
 status dtc_istream_mode_pop(dtc_istream *istream)

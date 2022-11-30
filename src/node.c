@@ -24,8 +24,11 @@ status dtc_node_init(dtc_node_init_param *n_init, dtc_node **out_node)
         node->next = n_init->n_next;
         node->prev = n_init->n_prev;
 
-        node->next->prev = node;
-        node->prev->next = node;
+        if(node->next)
+            node->next->prev = node;
+
+        if(node->prev)
+            node->prev->next = node;
 
         node->obj = n_init->n_obj;
     }
@@ -35,6 +38,10 @@ status dtc_node_init(dtc_node_init_param *n_init, dtc_node **out_node)
         node->prev = 0;
         node->obj = 0;
     }
+
+    /* REMEMBER: if some future code returns an error after this
+       Other than deallocating etc, it should also reset the next
+       and prev nodes' prev and next */
 
     *out_node = node;
 
