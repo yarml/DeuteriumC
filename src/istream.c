@@ -232,6 +232,15 @@ status dtc_istream_ghead(dtc_istream *stream, dtc_istream_head *out_head)
 
     return DTC_STATUS_SUCCESS;
 }
+status dtc_istream_shead(dtc_istream *stream, dtc_istream_head *head)
+{
+    DTC_ASSERT_PARAM_PTR_VALID(stream);
+    DTC_ASSERT_PARAM_PTR_VALID(head);
+
+    stream->head = *head;
+
+    return DTC_STATUS_SUCCESS;
+}
 status dtc_istream_file(dtc_istream *stream, FILE **out_fistream)
 {
     DTC_ASSERT_PARAM_PTR_VALID(stream);
