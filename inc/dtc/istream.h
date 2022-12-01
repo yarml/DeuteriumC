@@ -16,13 +16,14 @@ struct DTC_ISTREAM_HEAD
 
 #define DTC_STATUS_ISTREAM_FMODE_SKIP (1024)
 
+typedef void dtc_istream_state;
+
 #ifndef DTC
     typedef void dtc_istream;
 #else
     #include <internal/istream.h>
 #endif
 
-typedef void dtc_istream_state;
 
 typedef status(*dtc_istream_f_mode)(
     dtc_istream *istream,
