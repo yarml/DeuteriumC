@@ -18,8 +18,6 @@ file(GLOB_RECURSE DTC_INC "${DTC_INC_DIR}*.h" "${DTC_SRC_DIR}*.h")
 
 add_library(${DTC_TGT} STATIC ${DTC_SRC} ${DTC_INC})
 
-
-
 # Add DTC definition
 target_compile_definitions(${DTC_TGT} PRIVATE ${DTC_DEF_PFX})
 
