@@ -290,7 +290,12 @@ status dtc_istream_mode_pop(dtc_istream *istream)
 
 status dtc_istream_sstate(dtc_istream *istream, dtc_istream_state *state)
 {
+    DTC_ASSERT_PARAM_PTR_VALID(istream);
+    DTC_ASSERT_PARAM_PTR_VALID(state);
+
     istream->state = state;
+
+    return DTC_STATUS_SUCCESS;
 }
 
 status dtc_istream_read_more(dtc_istream *istream)
