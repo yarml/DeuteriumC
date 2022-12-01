@@ -184,23 +184,23 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
         DTC_CALL(status_sub, dtc_str_len(istream->data, &readlen))
             return status_sub;
 
+        int c;
+
         /* If readlen didn't change, then it means EOF was reached */
         if(istream->head.head_pos >= readlen)
-        {
-            DTC_SET_OUT(nout_c, EOF);
-            return DTC_STATUS_ISTREAM_READC_EOF;
-        }
-
-        int c;
-        dtc_str_getc(istream->data, istream->head.head_pos, &c);
-        ++istream->head.head_pos;
-        if(c == '\n')
-        {
-            istream->head.colm = 0;
-            ++istream->head.line;
-        }
+            c = EOF;
         else
-            ++istream->head.colm;
+        {
+            dtc_str_getc(istream->data, istream->head.head_pos, &c);
+            ++istream->head.head_pos;
+            if(c == '\n')
+            {
+                istream->head.colm = 0;
+                ++istream->head.line;
+            }
+            else
+                ++istream->head.colm;
+        }
 
         if(istream->top_mode)
         {
@@ -219,6 +219,8 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
 
         DTC_SET_OUT(nout_c, c);
 
+        if(c == EOF)
+            return DTC_STATUS_ISTREAM_READC_EOF;
         return DTC_STATUS_SUCCESS;
     }
 }
