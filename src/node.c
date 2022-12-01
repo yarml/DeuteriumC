@@ -83,6 +83,11 @@ status dtc_node_fini(dtc_node *node)
 {
     DTC_ASSERT_PARAM_PTR_VALID(node);
 
+    if(node->prev)
+        node->prev->next = node->next;
+    if(node->next)
+        node->next->prev = node->prev;
+
     free(node);
 
     return DTC_STATUS_SUCCESS;
