@@ -17,6 +17,7 @@ struct DTC_ISTREAM
     dtc_list *saved_heads;
     dtc_str *data;
     dtc_node *top_mode;
+    dtc_istream_state *state;
     dtc_istream_head head;
 };
 

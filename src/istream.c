@@ -49,6 +49,7 @@ status dtc_istream_init(FILE *fistream, dtc_istream **out_stream)
     }
 
     istream->top_mode = 0;
+    istream->state = 0;
 
     *out_stream = istream;
 
@@ -207,7 +208,7 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
             if(f_mode)
             {
                 int c2;
-                status s = f_mode(istream, c, &c2);
+                status s = f_mode(istream, istream->state, c, &c2);
 
                 if (s == DTC_STATUS_ISTREAM_FMODE_SKIP)
                     continue;
@@ -285,6 +286,11 @@ status dtc_istream_mode_pop(dtc_istream *istream)
         return status_sub;
 
     return DTC_STATUS_SUCCESS;
+}
+
+status dtc_istream_sstate(dtc_istream *istream, dtc_istream_state *state)
+{
+    istream->state = state;
 }
 
 status dtc_istream_read_more(dtc_istream *istream)
