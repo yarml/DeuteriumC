@@ -207,7 +207,7 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
             dtc_istream_f_mode f_mode = istream->top_mode->obj;
             if(f_mode)
             {
-                int c2;
+                int c2 = c;
                 status s = f_mode(istream, istream->state, c, &c2);
 
                 if (s == DTC_STATUS_ISTREAM_FMODE_SKIP)
