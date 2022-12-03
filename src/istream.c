@@ -224,6 +224,28 @@ status dtc_istream_readc(dtc_istream *istream, int *nout_c)
         return DTC_STATUS_SUCCESS;
     }
 }
+status dtc_istream_rawc(dtc_istream *istream, int *nout_c)
+{
+    DTC_ASSERT_PARAM_PTR_VALID(istream);
+
+    status status_sub = 0;
+
+    /* To not repeat the same code in readc
+       I thought of the stupid idea of locally storing
+       istream->top_mode and setting it to null, call readc, then
+       reset top_mode to its original value */
+
+    dtc_node *top_mode = istream->top_mode;
+
+    istream->top_mode = 0;
+
+    /* We don't need to do anything special in case of error,
+       We do the same thing in case of error or not */
+    DTC_CALL(status_sub, dtc_istream_readc(istream, nout_c));
+
+    istream->top_mode = top_mode;
+    return status_sub;
+}
 
 status dtc_istream_ghead(dtc_istream *stream, dtc_istream_head *out_head)
 {

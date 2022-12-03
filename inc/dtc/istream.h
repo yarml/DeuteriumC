@@ -54,6 +54,7 @@ status dtc_istream_head_slot_load(
 
 #define DTC_STATUS_ISTREAM_READC_EOF (1024)
 status dtc_istream_readc(dtc_istream *istream, int *nout_c);
+status dtc_istream_rawc(dtc_istream *istream, int *nout_c);
 
 status dtc_istream_ghead(dtc_istream *stream, dtc_istream_head *out_head);
 status dtc_istream_shead(dtc_istream *stream, dtc_istream_head *head);
